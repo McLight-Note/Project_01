@@ -134,7 +134,7 @@ else:
 
 # Add static files directories
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR.parent, "static"),
 ]
 
 # Default primary key field type
