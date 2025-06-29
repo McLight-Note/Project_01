@@ -4,12 +4,12 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: PYTHONPATH=$PYTHONPATH:. gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: cd remProdKitchen && gunicorn remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: DJANGO_SETTINGS_MODULE
-        value: remProdKitchen.remProdKitchen.settings
+        value: remProdKitchen.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG

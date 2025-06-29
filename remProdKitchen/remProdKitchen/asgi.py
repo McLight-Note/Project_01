@@ -11,6 +11,7 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "remProdKitchen.remProdKitchen.settings")
+# Explicitly set the settings module
+os.environ["DJANGO_SETTINGS_MODULE"] = "remProdKitchen.settings"
 
 application = get_asgi_application()
