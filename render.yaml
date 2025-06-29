@@ -1,12 +1,10 @@
 services:
   - type: web
-    name: boor-kitchen
+    name: remprodkitchen
     env: python
     plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-    startCommand: cd remProdKitchen && gunicorn remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd remProdKitchen && python manage.py migrate && python manage.py createsuperuser_render && python manage.py collectstatic --noinput && gunicorn remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -18,4 +16,26 @@ services:
         value: False
       - key: ALLOWED_HOSTS
         value: .onrender.com
-    healthCheckPath: / 
+      - key: SUPERUSER_USERNAME
+        value: admin
+      - key: SUPERUSER_EMAIL
+        value: admin@example.com
+      - key: SUPERUSER_PASSWORD
+        value: admin123456
+    healthCheckPath: /
+
+  - type: shell
+    name: remprodkitchen-shell
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd remProdKitchen && python manage.py shell
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: remProdKitchen.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False 
