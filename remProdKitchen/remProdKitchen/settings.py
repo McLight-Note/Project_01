@@ -124,7 +124,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 
 # Configure static files storage for production
 if not DEBUG:
