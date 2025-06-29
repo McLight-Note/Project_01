@@ -3,27 +3,94 @@
 {% block title %} Product List {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Products</h1>
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Product ID</th>
-                <th>Name</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Products</h1>
+        <div class="btn-group" role="group">
+            <a href="{% url 'product_create' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Add Product
+            </a>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-download"></i> Export
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'export_inventory' %}">
+                        <i class="bi bi-file-code"></i> Export as JSON
+                    </a></li>
+                    <li><a class="dropdown-item" href="{% url 'export_text' %}">
+                        <i class="bi bi-file-text"></i> Export as Text
+                    </a></li>
+                </ul>
+            </div>
+            <a href="{% url 'import_inventory' %}" class="btn btn-outline-info">
+                <i class="bi bi-upload"></i> Import
+            </a>
+            <a href="{% url 'backup_inventory' %}" class="btn btn-outline-warning">
+                <i class="bi bi-file-earmark-text"></i> Backup
+            </a>
+        </div>
+    </div>
+    
+    {% if products %}
+        <div class="row">
             {% for product in products %}
-            <tr>
-                <td>{{ product.product_id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.quantity }}</td>
-                <td>
-                    <a href="{% url 'product_update' product.product_id %}" class="btn btn-warning">Update</a>
-                    <a href="{% url 'product_delete' product.product_id%}" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">
+                            <strong>ID:</strong> {{ product.product_id }}<br>
+                            <strong>Quantity:</strong> 
+                            <span class="badge {% if product.quantity > 10 %}bg-success{% elif product.quantity > 5 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ product.quantity }}
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'product_update' product.product_id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            {% if product.quantity > 0 %}
+                                <a href="{% url 'decrease_quantity' product.product_id %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-dash-circle"></i> Decrease
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'product_delete' product.product_id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-box text-muted" style="font-size: 4rem;"></i>
+            <h3 class="text-muted mt-3">No products found</h3>
+            <p class="text-muted">Start by adding your first product!</p>
+            <a href="{% url 'product_create' %}" class="btn btn-primary">Add Product</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
