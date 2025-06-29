@@ -16,6 +16,67 @@
         .container{margin-top: 20px;}
         .table th, .table td{vertical-align: middle;}
         
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Hide content while loading */
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        
+        .main-content.loaded {
+            opacity: 1;
+        }
+        
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .btn-group .btn {
@@ -32,6 +93,13 @@
                 padding-left: 10px;
                 padding-right: 10px;
             }
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
+            .loading-text {
+                font-size: 1rem;
+            }
         }
         
         /* Touch-friendly buttons */
@@ -47,39 +115,89 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">Inventory App</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_create' %}">Add Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_list' %}">Show Products</a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Inventory App</div>
+            <div class="loading-subtext">Please wait while we prepare your dashboard...</div>
         </div>
-    </nav>
-    
-    {% if messages %}
-        <div class="container mt-2">
-            {% for message in messages %}
-                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    
-    <div class="container">
-        {% block content %}{% endblock  %}
     </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'home' %}">Inventory App</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'product_create' %}">Add Product</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'product_list' %}">Show Products</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        {% if messages %}
+            <div class="container mt-2">
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="container">
+            {% block content %}{% endblock  %}
+        </div>
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Loading Screen Management
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Minimum loading time (2 seconds)
+            const minLoadingTime = 2000;
+            const startTime = Date.now();
+            
+            // Function to hide loading screen
+            function hideLoadingScreen() {
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+                
+                setTimeout(function() {
+                    loadingScreen.classList.add('fade-out');
+                    mainContent.classList.add('loaded');
+                    
+                    // Remove loading screen from DOM after animation
+                    setTimeout(function() {
+                        loadingScreen.remove();
+                    }, 500);
+                }, remainingTime);
+            }
+            
+            // Hide loading screen when page is fully loaded
+            if (document.readyState === 'complete') {
+                hideLoadingScreen();
+            } else {
+                window.addEventListener('load', hideLoadingScreen);
+            }
+            
+            // Fallback: hide loading screen after 5 seconds maximum
+            setTimeout(hideLoadingScreen, 5000);
+        });
+    </script>
 </body>
 </html>
