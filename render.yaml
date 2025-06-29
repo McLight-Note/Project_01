@@ -3,7 +3,10 @@ services:
     name: boor-kitchen
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      cd remProdKitchen
+      python manage.py collectstatic --noinput
     startCommand: cd remProdKitchen && gunicorn remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
