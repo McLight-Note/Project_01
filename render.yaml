@@ -2,14 +2,20 @@ services:
   - type: web
     name: boor-kitchen
     env: python
+    plan: free
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-    startCommand: gunicorn remProdKitchen.remProdKitchen.wsgi:application
+    startCommand: gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
       - key: DJANGO_SETTINGS_MODULE
         value: remProdKitchen.remProdKitchen.settings
       - key: SECRET_KEY
-        value: changeme-in-render-dashboard
+        generateValue: true
       - key: DEBUG
-        value: False 
+        value: False
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+    healthCheckPath: / 
