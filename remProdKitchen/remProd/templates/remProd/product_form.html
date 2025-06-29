@@ -21,6 +21,10 @@
                     <form method="post" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
                         {{ form|crispy }}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Supported Image Formats:</strong> WebP, PNG, JPG, JPEG, GIF, BMP, TIFF (Max 5MB)
+                        </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'product_list' %}" class="btn btn-secondary me-md-2">Cancel</a>
                             <button type="submit" class="btn btn-primary">

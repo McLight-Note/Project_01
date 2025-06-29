@@ -32,7 +32,7 @@ class ProductForm(forms.ModelForm):
             'image': forms.FileInput(
                 attrs={
                     'class': 'form-control',
-                    'accept': 'image/*'
+                    'accept': 'image/webp,image/png,image/jpeg,image/jpg,image/gif,image/bmp,image/tiff'
                 }
             ),
         }
@@ -52,3 +52,19 @@ class ProductForm(forms.ModelForm):
         if quantity is not None and quantity < 0:
             raise forms.ValidationError("Quantity cannot be negative.")
         return quantity
+    
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            # Check file size (max 5MB)
+            if image.size > 5 * 1024 * 1024:
+                raise forms.ValidationError("Image file size must be under 5MB.")
+            
+            # Check file extension
+            allowed_extensions = ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff']
+            file_extension = image.name.lower()
+            if not any(file_extension.endswith(ext) for ext in allowed_extensions):
+                raise forms.ValidationError(
+                    "Please upload a valid image file. Supported formats: WebP, PNG, JPG, JPEG, GIF, BMP, TIFF"
+                )
+        return image
