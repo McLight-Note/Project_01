@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-shell = "*"
 django = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
