@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "remProdKitchen.urls"
+ROOT_URLCONF = "remProdKitchen.remProdKitchen.urls"
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "remProdKitchen.wsgi.application"
+WSGI_APPLICATION = "remProdKitchen.remProdKitchen.wsgi.application"
 
 
 # Database
