@@ -5,10 +5,10 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-    startCommand: gunicorn remProdKitchen.wsgi:application
+    startCommand: gunicorn remProdKitchen.remProdKitchen.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: remProdKitchen.settings
+        value: remProdKitchen.remProdKitchen.settings
       - key: SECRET_KEY
         value: changeme-in-render-dashboard
       - key: DEBUG
