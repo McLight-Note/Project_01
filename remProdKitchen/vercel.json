@@ -4,9 +4,21 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "api/django_handler.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
+    {
+      "src": "/django/(.*)",
+      "dest": "/api/django_handler.py"
+    },
+    {
+      "src": "/test",
+      "dest": "/api/test.py"
+    },
     {
       "src": "/(.*)",
       "dest": "/api/index.py"
