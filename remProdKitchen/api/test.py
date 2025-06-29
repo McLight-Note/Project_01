@@ -2,19 +2,8 @@ def handler(request, context):
     return {
         'statusCode': 200,
         'headers': {
-            'Content-Type': 'text/html',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
         },
-        'body': '''
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Vercel Test</title>
-        </head>
-        <body>
-            <h1>✅ Vercel Deployment Working!</h1>
-            <p>Your Django app is successfully deployed on Vercel.</p>
-            <p>Now you can access your inventory app at the main URL.</p>
-        </body>
-        </html>
-        '''
+        'body': '{"status": "success", "message": "Vercel deployment is working!", "timestamp": "' + str(__import__("datetime").datetime.now()) + '"}'
     } 
