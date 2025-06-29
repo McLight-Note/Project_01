@@ -15,30 +15,9 @@
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Products</h1>
-        <div class="btn-group" role="group">
-            <a href="{% url 'product_create' %}" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Add Product
-            </a>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-download"></i> Export
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'export_inventory' %}">
-                        <i class="bi bi-file-code"></i> Export as JSON
-                    </a></li>
-                    <li><a class="dropdown-item" href="{% url 'export_text' %}">
-                        <i class="bi bi-file-text"></i> Export as Text
-                    </a></li>
-                </ul>
-            </div>
-            <a href="{% url 'import_inventory' %}" class="btn btn-outline-info">
-                <i class="bi bi-upload"></i> Import
-            </a>
-            <a href="{% url 'backup_inventory' %}" class="btn btn-outline-warning">
-                <i class="bi bi-file-earmark-text"></i> Backup
-            </a>
-        </div>
+        <a href="{% url 'product_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add Product
+        </a>
     </div>
     
     {% if products %}
