@@ -124,7 +124,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Configure static files storage for production
 if not DEBUG:
@@ -134,11 +134,11 @@ else:
 
 # Add static files directories
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR.parent, "static"),
+    os.path.join(BASE_DIR, "static"),
 ]
 
-# WhiteNoise configuration
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+# WhiteNoise configuration for static files only
+# Note: WhiteNoise doesn't serve media files, so we keep the default for media
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
