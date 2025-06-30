@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.http import JsonResponse
-from .forms import ProductForm
+from .forms import ProductForm, UserRegistrationForm
 from .models import Product
 
 # Create your views here.
@@ -13,6 +13,22 @@ def home_view(request):
         return redirect('dashboard')
     else:
         return redirect('login')
+
+def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Account created successfully! Welcome to Inventory App.')
+            return redirect('dashboard')
+    else:
+        form = UserRegistrationForm()
+    
+    return render(request, 'remProd/signup.html', {'form': form})
 
 @login_required
 def dashboard_view(request):
