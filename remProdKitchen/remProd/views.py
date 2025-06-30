@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.http import JsonResponse, HttpResponse, Http404
 from django.conf import settings
+from django.forms import modelformset_factory
 import os
 from .forms import ProductForm
 from .models import Product
@@ -73,6 +74,24 @@ def product_create_view(request):
 def product_list_view(request):
     products = Product.objects.all()
     return render(request, 'remProd/product_list.html', {'products':products})
+
+@login_required
+def bulk_edit_view(request):
+    """Bulk edit multiple products at once"""
+    ProductFormSet = modelformset_factory(Product, fields=['name', 'quantity'], extra=0)
+    
+    if request.method == "POST":
+        formset = ProductFormSet(request.POST, queryset=Product.objects.all())
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, 'All products updated successfully!')
+            return redirect('product_list')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        formset = ProductFormSet(queryset=Product.objects.all())
+    
+    return render(request, 'remProd/bulk_edit.html', {'formset': formset})
 
 @login_required
 def product_update_view(request, product_id):
