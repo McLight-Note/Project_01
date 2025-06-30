@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py createsuperuser_render && gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
+    startCommand: DJANGO_SETTINGS_MODULE=remProdKitchen.remProdKitchen.settings python manage.py migrate --noinput && DJANGO_SETTINGS_MODULE=remProdKitchen.remProdKitchen.settings python manage.py collectstatic --noinput && DJANGO_SETTINGS_MODULE=remProdKitchen.remProdKitchen.settings python manage.py createsuperuser_render && gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -29,7 +29,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py shell
+    startCommand: DJANGO_SETTINGS_MODULE=remProdKitchen.remProdKitchen.settings python manage.py shell
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
