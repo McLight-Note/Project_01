@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
+from django.conf import settings
+import os
 from .forms import ProductForm
 from .models import Product
 
@@ -16,6 +18,34 @@ def home_view(request):
 
 def health_check(request):
     return HttpResponse("OK", content_type="text/plain")
+
+def serve_media(request, path):
+    """Custom view to serve media files in production"""
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    
+    # Debug information
+    print(f"Requested path: {path}")
+    print(f"Full file path: {file_path}")
+    print(f"MEDIA_ROOT: {settings.MEDIA_ROOT}")
+    print(f"File exists: {os.path.exists(file_path)}")
+    
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read())
+            # Set appropriate content type based on file extension
+            if path.endswith('.jpg') or path.endswith('.jpeg'):
+                response['Content-Type'] = 'image/jpeg'
+            elif path.endswith('.png'):
+                response['Content-Type'] = 'image/png'
+            elif path.endswith('.webp'):
+                response['Content-Type'] = 'image/webp'
+            elif path.endswith('.gif'):
+                response['Content-Type'] = 'image/gif'
+            else:
+                response['Content-Type'] = 'application/octet-stream'
+            return response
+    else:
+        raise Http404(f"File not found: {file_path}")
 
 @login_required
 def logout_view(request):
