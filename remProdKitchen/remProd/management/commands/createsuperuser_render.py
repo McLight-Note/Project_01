@@ -46,4 +46,17 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(f'Error creating superuser: {e}')
-            ) 
+            )
+            # Try alternative method
+            try:
+                call_command('createsuperuser', username=username, email=email, interactive=False)
+                user = User.objects.get(username=username)
+                user.set_password(password)
+                user.save()
+                self.stdout.write(
+                    self.style.SUCCESS(f'Superuser created using alternative method: {username}')
+                )
+            except Exception as e2:
+                self.stdout.write(
+                    self.style.ERROR(f'Alternative method also failed: {e2}')
+                ) 

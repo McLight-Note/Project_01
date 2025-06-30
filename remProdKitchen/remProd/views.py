@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .forms import ProductForm
 from .models import Product
 
@@ -13,6 +13,9 @@ def home_view(request):
         return redirect('dashboard')
     else:
         return redirect('login')
+
+def health_check(request):
+    return HttpResponse("OK", content_type="text/plain")
 
 @login_required
 def dashboard_view(request):

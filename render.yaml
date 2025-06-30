@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py migrate && python manage.py createsuperuser_render && python manage.py collectstatic --noinput && gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py createsuperuser_render && gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -22,7 +22,7 @@ services:
         value: admin@example.com
       - key: SUPERUSER_PASSWORD
         value: admin123456
-    healthCheckPath: /
+    healthCheckPath: /health/
 
   - type: shell
     name: remprodkitchen-shell

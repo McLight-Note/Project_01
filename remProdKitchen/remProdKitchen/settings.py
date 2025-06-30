@@ -128,7 +128,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 
 # Configure static files storage for production
 if not DEBUG:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 else:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
@@ -136,6 +136,9 @@ else:
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR.parent, "static"),
 ]
+
+# WhiteNoise configuration
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
