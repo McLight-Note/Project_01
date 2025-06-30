@@ -4,12 +4,12 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: cd remProdKitchen && python manage.py migrate && python manage.py createsuperuser_render && python manage.py collectstatic --noinput && gunicorn remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: python manage.py migrate && python manage.py createsuperuser_render && python manage.py collectstatic --noinput && gunicorn remProdKitchen.remProdKitchen.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: DJANGO_SETTINGS_MODULE
-        value: remProdKitchen.settings
+        value: remProdKitchen.remProdKitchen.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
@@ -29,12 +29,12 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: cd remProdKitchen && python manage.py shell
+    startCommand: python manage.py shell
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: DJANGO_SETTINGS_MODULE
-        value: remProdKitchen.settings
+        value: remProdKitchen.remProdKitchen.settings
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
