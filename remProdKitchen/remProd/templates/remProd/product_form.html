@@ -21,6 +21,13 @@
                     <form method="post" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
                         {{ form|crispy }}
+                        
+                        <!-- Image Preview -->
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <h6>Image Preview:</h6>
+                            <img id="preview" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px; max-width: 100%;">
+                        </div>
+                        
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i>
                             <strong>Supported Image Formats:</strong> WebP, PNG, JPG, JPEG, GIF, BMP, TIFF (Max 5MB)
@@ -41,4 +48,46 @@
         </div>
     </div>
 </div>
+
+<!-- Store existing image URL for JavaScript -->
+{% if form.instance.image %}
+<div id="existingImageUrl" data-url="{{ form.instance.image.url }}" style="display: none;"></div>
+{% endif %}
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('preview');
+    const previewDiv = document.getElementById('imagePreview');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            previewDiv.style.display = 'block';
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        previewDiv.style.display = 'none';
+    }
+}
+
+// Show preview for existing image if editing
+document.addEventListener('DOMContentLoaded', function() {
+    const imageField = document.querySelector('input[type="file"]');
+    const preview = document.getElementById('preview');
+    const previewDiv = document.getElementById('imagePreview');
+    const existingImageDiv = document.getElementById('existingImageUrl');
+    
+    // If there's an existing image (editing mode), show it
+    if (existingImageDiv) {
+        const existingImageUrl = existingImageDiv.getAttribute('data-url');
+        if (existingImageUrl) {
+            preview.src = existingImageUrl;
+            previewDiv.style.display = 'block';
+        }
+    }
+});
+</script>
 {% endblock %}

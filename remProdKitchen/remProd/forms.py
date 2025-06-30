@@ -32,7 +32,8 @@ class ProductForm(forms.ModelForm):
             'image': forms.FileInput(
                 attrs={
                     'class': 'form-control',
-                    'accept': 'image/webp,image/png,image/jpeg,image/jpg,image/gif,image/bmp,image/tiff'
+                    'accept': 'image/webp,image/png,image/jpeg,image/jpg,image/gif,image/bmp,image/tiff',
+                    'onchange': 'previewImage(this)'
                 }
             ),
         }
@@ -67,4 +68,13 @@ class ProductForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "Please upload a valid image file. Supported formats: WebP, PNG, JPG, JPEG, GIF, BMP, TIFF"
                 )
+            
+            # Additional validation for image content
+            try:
+                from PIL import Image
+                img = Image.open(image)
+                img.verify()  # Verify it's actually an image
+                image.seek(0)  # Reset file pointer
+            except Exception:
+                raise forms.ValidationError("The uploaded file is not a valid image.")
         return image
