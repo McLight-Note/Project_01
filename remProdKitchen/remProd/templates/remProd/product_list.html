@@ -38,10 +38,34 @@
                         <p class="card-text">
                             <strong>ID:</strong> {{ product.product_id }}<br>
                             <strong>Quantity:</strong> 
-                            <span class="badge {% if product.quantity > 10 %}bg-success{% elif product.quantity > 5 %}bg-warning{% else %}bg-danger{% endif %}">
+                            <span class="badge {% if product.quantity > 10 %}bg-success{% elif product.quantity > 5 %}bg-warning{% else %}bg-danger{% endif %} fs-6">
                                 {{ product.quantity }}
                             </span>
                         </p>
+                        
+                        <!-- Quantity Management Buttons -->
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <form method="post" action="{% url 'update_quantity' product.product_id %}" class="d-flex align-items-center">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="decrease">
+                                <input type="hidden" name="amount" value="1">
+                                <button type="submit" class="btn btn-outline-danger btn-sm me-2" 
+                                        {% if product.quantity <= 0 %}disabled{% endif %}>
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                            </form>
+                            
+                            <span class="mx-2 fw-bold">{{ product.quantity }}</span>
+                            
+                            <form method="post" action="{% url 'update_quantity' product.product_id %}" class="d-flex align-items-center">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="increase">
+                                <input type="hidden" name="amount" value="1">
+                                <button type="submit" class="btn btn-outline-success btn-sm ms-2">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     
                     <div class="card-footer">
@@ -49,11 +73,6 @@
                             <a href="{% url 'product_update' product.product_id %}" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
-                            {% if product.quantity > 0 %}
-                                <a href="{% url 'decrease_quantity' product.product_id %}" class="btn btn-outline-warning btn-sm">
-                                    <i class="bi bi-dash-circle"></i> Decrease
-                                </a>
-                            {% endif %}
                             <a href="{% url 'product_delete' product.product_id %}" class="btn btn-outline-danger btn-sm">
                                 <i class="bi bi-trash"></i> Delete
                             </a>
