@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.http import JsonResponse, HttpResponse
 from .forms import ProductForm
 from .models import Product
@@ -16,6 +16,12 @@ def home_view(request):
 
 def health_check(request):
     return HttpResponse("OK", content_type="text/plain")
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('login')
 
 @login_required
 def dashboard_view(request):

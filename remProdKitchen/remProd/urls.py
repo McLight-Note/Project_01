@@ -13,5 +13,5 @@ urlpatterns = [
     path('decrease/<int:product_id>/', views.decrease_quantity_view, name='decrease_quantity'),
     path('quantity/<int:product_id>/', views.update_quantity_view, name='update_quantity'),
     path('login/', auth_views.LoginView.as_view(template_name='remProd/login.html', next_page='dashboard'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('logout/', views.logout_view, name='logout'),
 ]
