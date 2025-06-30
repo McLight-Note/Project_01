@@ -2,32 +2,73 @@
 {% block title %}Login - Inventory App{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="max-width: 400px;">
-    <h2 class="mb-4 text-center">Login</h2>
-    <div class="card">
-        <div class="card-body">
-            <form method="post" novalidate>
-                {% csrf_token %}
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        Please enter the correct username and password. Note that both fields may be case-sensitive.
-                    </div>
-                {% endif %}
-                <div class="mb-3">
-                    <label for="id_username" class="form-label">Username</label>
-                    <input type="text" name="username" autofocus required class="form-control" id="id_username">
-                </div>
-                <div class="mb-3">
-                    <label for="id_password" class="form-label">Password</label>
-                    <input type="password" name="password" required class="form-control" id="id_password">
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-                
-                <div class="text-center">
-                    <p class="mb-0">Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
-                </div>
-            </form>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .auth-card {
+        box-shadow: 0 4px 32px rgba(44, 62, 80, 0.15);
+        border-radius: 1.25rem;
+        background: #fff;
+        padding: 2.5rem 2rem 2rem 2rem;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    .auth-icon {
+        font-size: 3rem;
+        color: #764ba2;
+        margin-bottom: 1rem;
+        display: block;
+        text-align: center;
+    }
+    .auth-btn {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        transition: background 0.2s;
+    }
+    .auth-btn:hover {
+        background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+        color: #fff;
+    }
+    .auth-link {
+        color: #764ba2;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+    .auth-link:hover {
+        color: #667eea;
+    }
+</style>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="auth-card w-100">
+        <div class="auth-icon">
+            <i class="bi bi-box-seam"></i>
         </div>
+        <h2 class="mb-4 text-center">Login</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Please enter the correct username and password. Note that both fields may be case-sensitive.
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Username</label>
+                <input type="text" name="username" autofocus required class="form-control" id="id_username">
+            </div>
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Password</label>
+                <input type="password" name="password" required class="form-control" id="id_password">
+            </div>
+            <button type="submit" class="btn auth-btn w-100 mb-3">Login</button>
+            <div class="text-center">
+                <p class="text-muted small">Contact your administrator to create an account.</p>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %} 
